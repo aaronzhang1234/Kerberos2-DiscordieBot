@@ -122,7 +122,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
 
                     personnum=p;
                     stackofid.push([idpersonbanned,p,0]);
-                    channel.sendMessage(idpersonbanned+ " has been stacked");
+                    channel.sendMessage("<@"+author.id+"> has started a vote to kick <@" +idpersonbanned+ ">");
                 }
             }
             setTimeout(function hello(){
@@ -144,7 +144,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
                     channel.sendMessage("Not enough votes have been gathered to kick <@"+id+">");
                 }
                 stackofid.shift();
-            },30000)
+            },60000)
         }
 
     }
