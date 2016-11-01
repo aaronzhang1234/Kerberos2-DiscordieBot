@@ -1,5 +1,5 @@
 
-//https://discordapp.com/oauth2/authorize?client_id=240242887143456768&scope=bot&permissions=0
+//https://discordapp.com/oauth2/authorize?client_id=241293063610171393&scope=bot&permissions=0
 var Discordie= require('discordie');
 var cleverbot= require('cleverbot.io');
 
@@ -8,12 +8,12 @@ const Events = Discordie.Events;
 const client = new Discordie();
 
 var bot = new cleverbot('TYHRwNcZFicTF4xI','rKarZL4vSevwLDnjLXnGK7MRkBwud1W1');
-bot.setNick("McMuffin");
+bot.setNick("kerberos2");
 
 
 
 client.connect({
-    token :'MjQwMjQyODg3MTQzNDU2NzY4.CvAnEQ.el88s9cIOfUh7M6T3VtQ7CFNq9A'
+    token :'MjQxMjkzMDYzNjEwMTcxMzkz.CvPxMw.bqxpWWMd3SrP8ZOH2pYVBDFr9tE'
 });
 
 client.Dispatcher.on(Events.GATEWAY_READY, e=>
@@ -26,6 +26,8 @@ client.Dispatcher.on(Events.GATEWAY_READY, e=>
 
 
 var stackofid=[]; //2d array to be used for banning people;
+
+
 
 client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
     const content = e.message.content;
@@ -42,8 +44,11 @@ client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
 
     //pings and testing
     if(content.indexOf("ping")==0) {
-        const personbannednogreat = content.replace(">","");
-        const idpersonbanned = personbannednogreat.substr(content.length-19);
+
+        if(1){
+            console.log(finduser(idpersonbanned));
+
+        }
 
         channel.sendMessage("pong");
 
@@ -51,7 +56,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
 
     //help command
     if(content.indexOf("!help")==0)
-           channel.sendMessage("!talk to talk to the bot");
+           channel.sendMessage("```Commands! \n !talk to talk to the bot \n !8ball to ask the bot a question \n !startvotekick to start a votekick to kick someone \n ex. !startvotekick @meme\n !votekick to vote on the person who is getting banned\n ex. !votekick @meme```");
 
 
     //cleverbot integration
@@ -104,7 +109,6 @@ client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
 
         var instack = false;
 
-        var personnum=0;
 
         for(var i=0;i!==len;i++){
             if(stackofid[i][0]==idpersonbanned){
@@ -120,14 +124,12 @@ client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
                 if(idpersonbanned == guild.members[p].id){
                     //addding the person into the stack to get judged to get vote kicked
 
-                    personnum=p;
-                    stackofid.push([idpersonbanned,p,0]);
+                    stackofid.push([idpersonbanned,0]);
                     channel.sendMessage("<@"+author.id+"> has started a vote to kick <@" +idpersonbanned+ ">");
                 }
             }
             setTimeout(function hello(){
-                const votekicks = stackofid[0][2];
-                const num = stackofid[0][1];
+                const votekicks = stackofid[0][1];
                 const id = stackofid[0][0];
 
                 channel.sendMessage(votekicks +" people voted to kick <@"+id+">");
@@ -138,7 +140,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
 
                     channel.sendMessage("<@"+id+"> has been kicked");
 
-                    guild.members[num].kick();
+                    guild.members[finduser(id)].kick();
                 }
                 else{
                     channel.sendMessage("Not enough votes have been gathered to kick <@"+id+">");
@@ -169,7 +171,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
             }
         }
         if(isin){
-            for(var o =3,len2=stackofid[loc].length;o!==len2;o++){
+            for(var o =2,len2=stackofid[loc].length;o!==len2;o++){
                 if(stackofid[loc][o]==author.discriminator){
 
                     //searching through the stack to see if the person who is voting has already voted
@@ -185,7 +187,7 @@ client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
                 //say to the plebs that they have voted
 
                 stackofid[loc].push(author.discriminator);
-                stackofid[loc][2]++;
+                stackofid[loc][1]++;
                 channel.sendMessage("<@"+author.id+"> has voted");
             }
         }
@@ -197,6 +199,16 @@ client.Dispatcher.on(Events.MESSAGE_CREATE,e=>{
     }
 
 
+
+
+    function finduser(id){
+        const guildmembers = guild.member_count;
+        for(var k =0;k!=guildmembers;k++){
+            if(guild.members[k].id == id){
+                return k;
+            }
+        }
+    }
 
 
     console.log(content);
